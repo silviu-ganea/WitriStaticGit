@@ -15,10 +15,8 @@ namespace WitriStatic
 
             DataModel dataModel = new DataModel();
             ModelParser.loadXmlDataIntoModel(dataModel);
-            HppParser.loadId(dataModel);
+            HppParser.loadWidgetsIDs(dataModel.widgetDict);
         }
-
-        
     }
     
 }
