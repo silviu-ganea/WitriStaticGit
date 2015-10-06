@@ -63,7 +63,7 @@ namespace WitriStatic
             {
                 XDocument xdoc = XDocument.Load(file);
                 getWindowData(xdoc, dataModel);
-                getSectionData(xdoc, dataModel);
+                getBufletSectionData(xdoc, dataModel);
                 getCompositorData(xdoc, dataModel);
 
             }
@@ -188,34 +188,195 @@ namespace WitriStatic
                 }
             }
         }
-        public static void getSectionData(XDocument xdoc, DataModel dataModel)
+        public static void getBufletSectionData(XDocument xdoc, DataModel dataModel)
         {
             Dictionary<string, DataModel.Section> section_dict = dataModel.sectionDict;
+            Dictionary<string, DataModel.Buflet> buflet_dict = dataModel.bufletDict;
 
             var buflets = xdoc.Descendants("Buflet");
             foreach(var buflet_xel in buflets)
             {
+                //load all the buflet data
                 string buflet_name = string.Empty;
                 if(buflet_xel.Attribute("Name") != null)
                 {
                     buflet_name = buflet_xel.Attribute("Name").Value;
+
+                    DataModel.Buflet tempBuflet = new DataModel.Buflet(buflet_name);
+                    string tempAttrVal = string.Empty;
+                    if (buflet_xel.Attribute("Is3D") != null)
+                    {
+                        tempAttrVal = buflet_xel.Attribute("Is3D").Value;
+                        tempBuflet.Is3D = tempAttrVal;
+                    }
+                    if (buflet_xel.Attribute("Surface") != null)
+                    {
+                        tempAttrVal = buflet_xel.Attribute("Surface").Value;
+                        tempBuflet.Surface = tempAttrVal;
+                    }
+                    if (buflet_xel.Attribute("Policy") != null)
+                    {
+                        tempAttrVal = buflet_xel.Attribute("Policy").Value;
+                        tempBuflet.Policy = tempAttrVal;
+                    }
+                    if (buflet_xel.Attribute("IsPreMultiplied") != null)
+                    {
+                        tempAttrVal = buflet_xel.Attribute("IsPreMultiplied").Value;
+                        tempBuflet.IsPreMultiplied = tempAttrVal;
+                    }
+                    if (buflet_xel.Attribute("SyncCompAndPixelData") != null)
+                    {
+                        tempAttrVal = buflet_xel.Attribute("SyncCompAndPixelData").Value;
+                        tempBuflet.SyncCompAndPixelData = tempAttrVal;
+                    }
+                    if (buflet_xel.Attribute("Background") != null)
+                    {
+                        tempAttrVal = buflet_xel.Attribute("Background").Value;
+                        tempBuflet.Background = tempAttrVal;
+                    }
+                    if (!buflet_dict.ContainsKey(buflet_name))
+                    {
+                        buflet_dict.Add(buflet_name, tempBuflet);
+                    }
+                    else
+                    {
+                        buflet_dict[buflet_name] = mergeBuflets(buflet_dict[buflet_name], tempBuflet);
+                    }
+                    
                 }
-                foreach(var section_xel in buflet_xel.Descendants("Section"))
+                foreach (var section_xel in buflet_xel.Descendants("Section"))
                 {
+                    //load all section attributes into the object
                     string section_name = string.Empty;
                     if(section_xel.Attribute("Name") != null)
                     {
                         section_name = section_xel.Attribute("Name").Value;
                         DataModel.Section tempSection = new DataModel.Section(section_name);
                         tempSection.Buflet = buflet_name;
+                        string tempAttrVal = string.Empty;
+                        if (section_xel.Attribute("Width") != null)
+                        {
+                            tempAttrVal = section_xel.Attribute("Width").Value;
+                            tempSection.Width = tempAttrVal;
+                        }
+                        if (section_xel.Attribute("Height") != null)
+                        {
+                            tempAttrVal = section_xel.Attribute("Height").Value;
+                            tempSection.Height = tempAttrVal;
+                        }
+                        if (section_xel.Attribute("PosX") != null)
+                        {
+                            tempAttrVal = section_xel.Attribute("PosX").Value;
+                            tempSection.PosX = tempAttrVal;
+                        }
+                        if (section_xel.Attribute("PosY") != null)
+                        {
+                            tempAttrVal = section_xel.Attribute("PosY").Value;
+                            tempSection.PosY = tempAttrVal;
+                        }
+                        if (section_xel.Attribute("Background") != null)
+                        {
+                            tempAttrVal = section_xel.Attribute("Background").Value;
+                            tempSection.Background = tempAttrVal;
+                        }
                         if (!section_dict.ContainsKey(section_name))
                         {
-                            section_dict.Add(section_name, tempSection);                            
+                            section_dict.Add(section_name, tempSection);
+                            if(buflet_dict.ContainsKey(buflet_name) && !buflet_dict[buflet_name].Sections.Contains(section_name))
+                            {
+                                buflet_dict[buflet_name].Sections.Add(section_name);
+                            }
                         }
                     }
+                    
                 }
 
             }
+        }
+        public static DataModel.Buflet mergeBuflets(DataModel.Buflet buflet1, DataModel.Buflet buflet2)
+        {
+            DataModel.Buflet mergedBuflet = new DataModel.Buflet(buflet1.Name);
+            if(buflet1 != null && buflet2 != null)
+            {
+                if(buflet1.ID != null)
+                {
+                    mergedBuflet.ID = buflet1.ID;
+                }
+                else
+                {
+                    mergedBuflet.ID = buflet2.ID;
+                }
+
+                if (buflet1.Background != null)
+                {
+                    mergedBuflet.Background = buflet1.Background;
+                }
+                else
+                {
+                    mergedBuflet.Background = buflet2.Background;
+                }
+
+                if (buflet1.Is3D != null)
+                {
+                    mergedBuflet.Is3D = buflet1.Is3D;
+                }
+                else
+                {
+                    mergedBuflet.Is3D = buflet2.Is3D;
+                }
+
+                if (buflet1.IsPreMultiplied != null)
+                {
+                    mergedBuflet.IsPreMultiplied = buflet1.IsPreMultiplied;
+                }
+                else
+                {
+                    mergedBuflet.IsPreMultiplied = buflet2.IsPreMultiplied;
+                }
+
+                if (buflet1.Policy != null)
+                {
+                    mergedBuflet.Policy = buflet1.Policy;
+                }
+                else
+                {
+                    mergedBuflet.Policy = buflet2.Policy;
+                }
+
+                if (buflet1.Surface != null)
+                {
+                    mergedBuflet.Surface = buflet1.Surface;
+                }
+                else
+                {
+                    mergedBuflet.Surface = buflet2.Surface;
+                }
+
+                if (buflet1.SyncCompAndPixelData != null)
+                {
+                    mergedBuflet.SyncCompAndPixelData = buflet1.SyncCompAndPixelData;
+                }
+                else
+                {
+                    mergedBuflet.SyncCompAndPixelData = buflet2.SyncCompAndPixelData;
+                }
+                foreach(string section in buflet1.Sections)
+                {
+                    if (!mergedBuflet.Sections.Contains(section))
+                    {
+                        mergedBuflet.Sections.Add(section);
+                    }
+                }
+                foreach (string section in buflet2.Sections)
+                {
+                    if (!mergedBuflet.Sections.Contains(section))
+                    {
+                        mergedBuflet.Sections.Add(section);
+                    }
+                }
+            }
+
+            return mergedBuflet;
         }
         public static bool isDetached(string widgetName)
         {

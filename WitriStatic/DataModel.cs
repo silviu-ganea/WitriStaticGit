@@ -10,17 +10,17 @@ namespace WitriStatic
     {
         public Dictionary<string, Window> windowDict;
         public Dictionary<string, Widget> widgetDict;
-        public Dictionary<string, Compositor> compositorDict;
         public Dictionary<string, Layer> layerDict;
         public Dictionary<string, Section> sectionDict;
+        public Dictionary<string, Buflet> bufletDict;
         public List<string> detachedWidgets;
 
         public DataModel(){
             this.windowDict = new Dictionary<string, Window>();
             this.widgetDict = new Dictionary<string, Widget>();
-            this.compositorDict = new Dictionary<string, Compositor>();
             this.layerDict = new Dictionary<string, Layer>();
             this.sectionDict = new Dictionary<string, Section>();
+            this.bufletDict = new Dictionary<string, Buflet>();
             this.detachedWidgets = new List<string>();
     }
         public class Widget
@@ -44,20 +44,32 @@ namespace WitriStatic
                 this.xelem = xelem;
             }    
         }
-        public class Buflet : Widget
+        public class Buflet
         {
-            public Buflet(string name) : base(name)
-            {
+            public string Name { get; set; }
+            public string ID { get; set; }
+            public string Is3D { get; set; }
+            public string Surface { get; set; }
+            public string Policy { get; set; }
+            public string IsPreMultiplied { get; set; }
+            public string SyncCompAndPixelData { get; set; }
+            public string Background { get; set; }
+
+            public Buflet(string name) { 
+                this.Name = name;
+                this.Sections = new List<string>();
             }
-            public Buflet(string name, XElement xelem) : base(name)
-            {
-            }
-            Dictionary<string, Section> sections;
+            public List<string> Sections;
         }
         public class Section
         {
             public string Name { get; set; }
             public string ID { get; set; }
+            public string Width { get; set; }
+            public string Height { get; set; }
+            public string PosX { get; set; }
+            public string PosY { get; set; }
+            public string Background { get; set; }
             public string Buflet { get; set; }
             public Section(string name)
             {
@@ -78,13 +90,13 @@ namespace WitriStatic
                 this.Name = name;
             }
         }
-        public class Compositor : Widget
+        public class Compositor
         {
-            public Compositor(string name) : base(name)
+            public string Name { get; set; }
+            public string ID { get; set; }
+            public Compositor(string name) 
             {
-            }
-            public Compositor(string name, XElement xelem) : base(name)
-            {
+                this.Name = name;
             }
             Dictionary<string, Layer> layers;
         }

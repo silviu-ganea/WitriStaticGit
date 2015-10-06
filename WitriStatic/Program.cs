@@ -18,5 +18,4 @@ namespace WitriStatic
             HppParser.loadWidgetsIDs(dataModel.widgetDict);
         }
     }
-    
 }
