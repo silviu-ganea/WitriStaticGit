@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.IO;
 
 namespace WitriStatic
 {
@@ -13,16 +14,19 @@ namespace WitriStatic
         public Dictionary<string, Layer> layerDict;
         public Dictionary<string, Section> sectionDict;
         public Dictionary<string, Buflet> bufletDict;
+        public Dictionary<string, Message> messageDict;
         public List<string> detachedWidgets;
 
-        public DataModel(){
+        public DataModel()
+        {
             this.windowDict = new Dictionary<string, Window>();
             this.widgetDict = new Dictionary<string, Widget>();
             this.layerDict = new Dictionary<string, Layer>();
             this.sectionDict = new Dictionary<string, Section>();
             this.bufletDict = new Dictionary<string, Buflet>();
+            this.messageDict = new Dictionary<string, Message>();
             this.detachedWidgets = new List<string>();
-    }
+        }
         public class Widget
         {
             public string Name { get; set; }
@@ -42,7 +46,7 @@ namespace WitriStatic
             public Widget(string name, XElement xelem) : this(name)
             {
                 this.xelem = xelem;
-            }    
+            }
         }
         public class Buflet
         {
@@ -55,7 +59,8 @@ namespace WitriStatic
             public string SyncCompAndPixelData { get; set; }
             public string Background { get; set; }
 
-            public Buflet(string name) { 
+            public Buflet(string name)
+            {
                 this.Name = name;
                 this.Sections = new List<string>();
             }
@@ -94,13 +99,13 @@ namespace WitriStatic
         {
             public string Name { get; set; }
             public string ID { get; set; }
-            public Compositor(string name) 
+            public Compositor(string name)
             {
                 this.Name = name;
             }
             Dictionary<string, Layer> layers;
         }
-        public class Layer 
+        public class Layer
         {
             public string Name { get; set; }
             public string ID { get; set; }
@@ -110,7 +115,17 @@ namespace WitriStatic
             public Layer(string name)
             {
                 this.Name = name;
-            }          
-        }   
+            }
+        }
+        public class Message
+        {
+            public string Name { get; set; }
+            public string ID { get; set; }
+            public Message(string Name, string ID)
+            {
+                this.Name = Name;
+                this.ID = ID;
+            }
+        }
     }
 }

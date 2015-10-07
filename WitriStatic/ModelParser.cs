@@ -9,9 +9,11 @@ namespace WitriStatic
 {
     public static class ModelParser
     {
-        public static string brutusModelPath = @"d:\casdev\sw-frames\GC\213\EL\IC213GC_EL_Series_E009_4.V09.04.pre50_2\tool\brutus\adapt\model\";
-        public static string widgetsFolderPath = @"d:\casdev\sw-frames\GC\213\EL\IC213GC_EL_Series_E009_4.V09.04.pre50_2\tool\brutus\adapt\model\60_Widgets\";
-        public static string ciaFolderPath = @"d:\casdev\sw-frames\GC\213\EL\IC213GC_EL_Series_E009_4.V09.04.pre50_2\tool\brutus\adapt\model\10_CIA\";
+        public static string framePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "..//..//..//"));
+        public static string brutusModelPath = Path.GetFullPath(Path.Combine(framePath, @"tool\brutus\adapt\model\"));
+        public static string widgetsFolderPath = Path.GetFullPath(Path.Combine(framePath, @"tool\brutus\adapt\model\60_Widgets\"));
+        public static string ciaFolderPath = Path.GetFullPath(Path.Combine(framePath, @"tool\brutus\adapt\model\10_CIA\"));
+        public static StringBuilder log = new StringBuilder();
 
         public static void loadXmlDataIntoModel(DataModel dataModel)
         {
@@ -20,11 +22,7 @@ namespace WitriStatic
             parseBrutusModel_CIA(ciaFolderPath, dataModel);
 
             //get window data into window dictionary
-            getWindowDictionary(ciaFolderPath, dataModel.windowDict);
-        }
 
-        private static void getWindowDictionary(string ciaFolderPath, Dictionary<string, DataModel.Window> windowDict)
-        {
         }
 
         private static void parseBrutusModel_Widgets(string widgetsFolderPath, DataModel dataModel)
@@ -40,10 +38,12 @@ namespace WitriStatic
                 foreach(XElement widget_xel in xdoc.Descendants("Widget"))
                 {
                     //create a widget object and add it to the dictionary
-                    if(widget_xel.Attribute("Name")!= null){
+                    if (widget_xel.Attribute("Name") != null)
+                    {
                         string widget_name = widget_xel.Attribute("Name").Value;
                         //check if the dictionary contains the widget before adding it : if it does, update the xelement
-                        if (!widget_dict.Keys.Contains(widget_name)) {
+                        if (!widget_dict.Keys.Contains(widget_name))
+                        {
                             //DataModel.Widget tempWidget = new DataModel.Widget(widget_name, widget_xel);
                             DataModel.Widget tempWidget = new DataModel.Widget(widget_name);
                             widget_dict.Add(widget_name, tempWidget);
@@ -110,7 +110,8 @@ namespace WitriStatic
                                 dataModel.detachedWidgets.Add(widgetName);
                                 if (widget_dict[widgetName].Section != null || widget_dict[widgetName].Buflet != null || widget_dict[widgetName].Window != null)
                                 {
-                                    Console.WriteLine("Error: " + widgetName + " was found as a section twice and its properties were overwriten");
+                                    //Console.WriteLine("Error: " + widgetName + " was found as a section twice and its properties were overwriten");
+                                    log.AppendLine("Error: " + widgetName + " was found as a section twice and its properties were overwriten");
                                 }
                                 widget_dict[widgetName].Section = sectionName;
                                 widget_dict[widgetName].Buflet = bufletName;
@@ -118,7 +119,8 @@ namespace WitriStatic
                             }
                             else
                             {
-                                Console.Out.WriteLine("Error: " + widgetName + " was found as a section but is not found as a widget");
+                                //Console.Out.WriteLine("Error: " + widgetName + " was found as a section but is not found as a widget");
+                                log.AppendLine("Error: " + widgetName + " was found as a section but is not found as a widget");
                             }
                             
                             //add window data to dictionary
