@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.IO;
+using System.Windows.Forms;
 
 
 namespace WitriStatic
@@ -12,18 +13,21 @@ namespace WitriStatic
     {
         static void Main(string[] args)
         {
-            DataModel dataModel = new DataModel();
+            //DataModel dataModel = new DataModel();
 
-            ModelParser.loadXmlDataIntoModel(dataModel);
-            HppParser.loadHppDataIntoModel(dataModel);
+            //ModelParser.loadXmlDataIntoModel(dataModel);
+            //HppParser.loadHppDataIntoModel(dataModel);
 
-            #region logger
-            StringBuilder logger = new StringBuilder();
-            logger.Append(ModelParser.log);
-            logger.Append(HppParser.log);
-            File.WriteAllText("log.txt", logger.ToString());
-            #endregion
+            //#region logger
+            //StringBuilder logger = new StringBuilder();
+            //logger.Append(ModelParser.log);
+            //logger.Append(HppParser.log);
+            //File.WriteAllText("log.txt", logger.ToString());
+            //#endregion
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new UserInterface());
         }
     }
 }

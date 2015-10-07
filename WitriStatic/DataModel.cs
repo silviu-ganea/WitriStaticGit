@@ -17,6 +17,13 @@ namespace WitriStatic
         public Dictionary<string, Message> messageDict;
         public List<string> detachedWidgets;
 
+        public Dictionary<string, string> windowNameIdDict;
+        public Dictionary<string, string> widgetNameIdDict;
+        public Dictionary<string, string> layerNameIdDict;
+        public Dictionary<string, string> sectionNameIdDict;
+        public Dictionary<string, string> bufletNameIdDict;
+        public Dictionary<string, string> messageNameIdDict;
+
         public DataModel()
         {
             this.windowDict = new Dictionary<string, Window>();
@@ -25,6 +32,14 @@ namespace WitriStatic
             this.sectionDict = new Dictionary<string, Section>();
             this.bufletDict = new Dictionary<string, Buflet>();
             this.messageDict = new Dictionary<string, Message>();
+
+            this.windowNameIdDict = new Dictionary<string, string>();
+            this.widgetNameIdDict = new Dictionary<string, string>();
+            this.layerNameIdDict = new Dictionary<string, string>();
+            this.sectionNameIdDict = new Dictionary<string, string>();
+            this.bufletNameIdDict = new Dictionary<string, string>();
+            this.messageNameIdDict = new Dictionary<string, string>();
+
             this.detachedWidgets = new List<string>();
         }
         public class Widget
@@ -126,6 +141,74 @@ namespace WitriStatic
                 this.Name = Name;
                 this.ID = ID;
             }
+        }
+
+        public void mapWidgetNameID()
+        {
+            foreach(Window window in windowDict.Values)
+            {
+                string windowNameID = window.Name;
+                if(window.ID != null)
+                {
+                    windowNameID += " - (" + window.ID + ")";
+                }
+
+                windowNameIdDict.Add(windowNameID, window.Name);
+            }
+            foreach (Widget widget in widgetDict.Values)
+            {
+                string widgetNameID = widget.Name;
+                if (widget.ID != null)
+                {
+                    widgetNameID += " - (" + widget.ID + ")";
+                }
+                if (widget.isDetached)
+                {
+                    widgetNameID += " - (detached)";
+                }
+                widgetNameIdDict.Add(widgetNameID, widget.Name);
+            }
+            foreach (Layer layer in layerDict.Values)
+            {
+                string layerNameID = layer.Name;
+                if (layer.ID != null)
+                {
+                    layerNameID += " - (" + layer.ID + ")";
+                }
+
+                layerNameIdDict.Add(layerNameID, layer.Name);
+            }
+            foreach (Section section in sectionDict.Values)
+            {
+                string sectionNameID = section.Name;
+                if (section.ID != null)
+                {
+                    sectionNameID += " - (" + section.ID + ")";
+                }
+
+                sectionNameIdDict.Add(sectionNameID, section.Name);
+            }
+            foreach (Buflet buflet in bufletDict.Values)
+            {
+                string bufletNameID = buflet.Name;
+                if (buflet.ID != null)
+                {
+                    bufletNameID += " - (" + buflet.ID + ")";
+                }
+
+                bufletNameIdDict.Add(bufletNameID, buflet.Name);
+            }
+            foreach (Message message in messageDict.Values)
+            {
+                string messageNameID = message.Name;
+                if (message.ID != null)
+                {
+                    messageNameID += " - (" + message.ID + ")";
+                }
+
+                messageNameIdDict.Add(messageNameID, message.Name);
+            }
+
         }
     }
 }
