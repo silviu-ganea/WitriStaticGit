@@ -10,6 +10,13 @@ namespace WitriStatic
     class HppParser
     {
         public static string framePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "..//..//..//"));
+
+        internal static void loadHppDataIntoModel(DataModel dataModel)
+        {
+            loadWidgetsIDs(dataModel.widgetDict);
+            loadMessagesData(dataModel);
+        }
+
         public static string adaptBrutusPath = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\"));
         static string filePath =       Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_VisualResourceIDs.hpp"));
         static string filePathWidget = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_VisualResourceIDs.hpp"));
@@ -173,6 +180,34 @@ namespace WitriStatic
                         continue;
                     }
                     else if(read && line.Contains("}"))
+                    {
+                        break;
+                    }
+                    if (read)
+                    {
+                        string trimLine = line.Trim();
+                        var match = Regex.Matches(trimLine, @"([\w]+)(?:[\s]+=[\s])([\d]+)")[0];
+                        string messageName = match.Groups[1].Value;
+                        string messageID = match.Groups[2].Value;
+                        DataModel.Message message = new DataModel.Message(messageName, messageID);
+                        if (!message_dict.ContainsKey(messageName))
+                        {
+                            message_dict.Add(messageName, message);
+                        }
+                    }
+                }
+            }
+            if (File.Exists(path2))
+            {
+                bool read = false;
+                foreach (string line in File.ReadLines(path2))
+                {
+                    if (line.Contains("enum WRS_ExternalEvents"))
+                    {
+                        read = true;
+                        continue;
+                    }
+                    else if (read && line.Contains("}"))
                     {
                         break;
                     }

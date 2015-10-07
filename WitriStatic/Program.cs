@@ -15,9 +15,7 @@ namespace WitriStatic
             DataModel dataModel = new DataModel();
 
             ModelParser.loadXmlDataIntoModel(dataModel);
-            HppParser.loadWidgetsIDs(dataModel.widgetDict);
-            HppParser.loadMessagesData(dataModel);
-            //HppParser.loadDifferentData(dataModel);
+            HppParser.loadHppDataIntoModel(dataModel);
 
             #region logger
             StringBuilder logger = new StringBuilder();
