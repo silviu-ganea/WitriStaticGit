@@ -33,8 +33,19 @@ namespace WitriStatic
                 listView1.BeginUpdate();
                 foreach(var widgetNameId_kvp in dataModel.widgetNameIdDict)
                 {
-                    listView1.Items.Add(widgetNameId_kvp.Key);
-                } 
+                    if (dataModel.widgetDict[widgetNameId_kvp.Value].isDetached)
+                    {
+                        ListViewItem tempItem = new ListViewItem();
+                        tempItem.Text = widgetNameId_kvp.Key;
+                        tempItem.ForeColor = Color.DarkGreen;
+                        listView1.Items.Add(tempItem);
+                    }
+                    else
+                    {
+                        listView1.Items.Add(widgetNameId_kvp.Key);
+                    }
+                        
+                }
                 listView1.EndUpdate();
             }
         }
@@ -115,7 +126,7 @@ namespace WitriStatic
                         {
                             ListViewItem tempItem = new ListViewItem();
                             tempItem.Text = widgetNameIdDetached.Key;
-                            tempItem.ForeColor = Color.DarkTurquoise;
+                            tempItem.ForeColor = Color.DarkGreen;
                             listView1.Items.Add(tempItem);
                         }
                         else
@@ -310,6 +321,8 @@ namespace WitriStatic
                     }
                 }
             }
+            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
     }
 }
