@@ -17,12 +17,36 @@ namespace WitriStatic
 
         public static void loadXmlDataIntoModel(DataModel dataModel)
         {
-            //get widget data into widget dictionary
-            parseBrutusModel_Widgets(widgetsFolderPath, dataModel);
-            parseBrutusModel_CIA(ciaFolderPath, dataModel);
-
-            //get window data into window dictionary
-
+            if (!Directory.Exists(framePath))
+            {
+                log.AppendLine("Error: path " + framePath + " doesn't exist.");
+            }
+            else if (!Directory.Exists(brutusModelPath))
+            {
+                log.AppendLine("Error: path " + brutusModelPath + " doesn't exist.");
+            }
+            else if(!Directory.Exists(widgetsFolderPath))
+            {
+                log.AppendLine("Error: path " + widgetsFolderPath + " doesn't exist.");
+            }
+            else if(!Directory.Exists(ciaFolderPath))
+            {
+                log.AppendLine("Error: path " + ciaFolderPath + " doesn't exist.");
+            }
+            else
+            {
+                try
+                {
+                    //get widget data into widget dictionary
+                    parseBrutusModel_Widgets(widgetsFolderPath, dataModel);
+                    parseBrutusModel_CIA(ciaFolderPath, dataModel);
+                }
+                catch (Exception e)
+                {
+                    log.AppendLine("Error parsing xml model: " + e.StackTrace + e.Message);
+                }
+                
+            }
         }
 
         private static void parseBrutusModel_Widgets(string widgetsFolderPath, DataModel dataModel)

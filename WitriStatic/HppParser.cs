@@ -10,18 +10,44 @@ namespace WitriStatic
     class HppParser
     {
         public static string framePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "..//..//..//"));
-
-        internal static void loadHppDataIntoModel(DataModel dataModel)
-        {
-            loadWidgetsIDs(dataModel.widgetDict);
-            loadMessagesData(dataModel);
-        }
-
         public static string adaptBrutusPath = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\"));
         static string filePath =       Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_VisualResourceIDs.hpp"));
         static string filePathWidget = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_VisualResourceIDs.hpp"));
         static string filePathBuflet = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_CIAResourceIDs.hpp"));
         public static StringBuilder log = new StringBuilder();
+
+        internal static void loadHppDataIntoModel(DataModel dataModel)
+        {
+            if (!Directory.Exists(framePath))
+            {
+                log.AppendLine("Error: path " + framePath + " doesn't exist.");
+            }
+            else if (!File.Exists(filePath))
+            {
+                log.AppendLine("Error: path " + filePath + " doesn't exist.");
+            }
+            else if (!File.Exists(filePathWidget))
+            {
+                log.AppendLine("Error: path " + filePathWidget + " doesn't exist.");
+            }
+            else if (!File.Exists(filePathBuflet))
+            {
+                log.AppendLine("Error: path " + filePathBuflet + " doesn't exist.");
+            }
+            else
+            {
+                try
+                {
+                    loadWidgetsIDs(dataModel.widgetDict);
+                    loadDifferentData(dataModel);
+                    loadMessagesData(dataModel);
+                }
+                catch (Exception e)
+                {
+                    log.AppendLine("Error when parsing .hpp files " + e.StackTrace + e.Message);
+                }
+            }
+        }
 
         public static void loadWidgetsIDs(Dictionary<string, DataModel.Widget> d)
         {
@@ -93,48 +119,57 @@ namespace WitriStatic
             string line = reader.ReadLine();
 
             //insert buflets IDs
-            while(!line.Contains("BufletIDs"))
+            while (!line.Contains("BufletIDs"))
             {
                 line = reader.ReadLine();
             }
             line = reader.ReadLine();
+            int i = 0;//counter that counts how many time 'line' contains' NumberOfLayerBuflets'
+
             //now we are at the line where the buflets IDs are stored
-            while(!line.Contains("NumberOfBuflets ,"))
+            while (i < 2)
             {
-                if (line.Contains("="))
+                if (line.Contains("NumberOfBuflets") || line.Contains("NumberOfLayerBuflets"))
                 {
-                    string bName = line.Split('=')[0].Trim();
-                    string bId = line.Split('=')[1].Split(',')[0].Trim();
-                    bName = bName.Replace("Buflet_", "");
-                    if (dM.bufletDict.Keys.Contains(bName))
-                    {
-                        dM.bufletDict[bName].ID = bId;
-                        //Console.WriteLine("Buflet : " + bName + " - " + bId);
-                        log.AppendLine("Buflet : " + bName + " - " + bId);
-                    }
+                    i++;
                     line = reader.ReadLine();
+                }
+                else
+                {
+                    if (line.Contains("="))
+                    {
+                        string bName = line.Split('=')[0].Trim();
+                        string bId = line.Split('=')[1].Split(',')[0].Trim();
+                        bName = bName.Replace("Buflet_", "");
+                        if (dM.bufletDict.Keys.Contains(bName))
+                        {
+                            dM.bufletDict[bName].ID = bId;
+                            //Console.WriteLine("Buflet : " + bName + " - " + bId);
+                        }
+                        line = reader.ReadLine();
+                    }
                 }
             }
 
             //insert Windows IDs
-            while(!line.Contains("WindowIDs"))
+            while (!line.Contains("WindowIDs"))
             {
                 line = reader.ReadLine();
             }
             line = reader.ReadLine();
             //now we are at the line where the Windows IDs are stored
-            while(!line.Contains("LastConfiguredWindowsID"))
+            while (!line.Contains("LastConfiguredWindowsID"))
             {
                 if (!line.Contains("//"))
                 {
                     string wName = line.Split('=')[0].Trim();
                     string wId = line.Split('=')[1].Split(',')[0].Trim();
                     wName = wName.Replace("Window_", "");
-                    if(dM.windowDict.Keys.Contains(wName))
+                    if (dM.windowDict.Keys.Contains(wName))
                     {
                         dM.windowDict[wName].ID = wId;
                         //Console.WriteLine("Window : "+wName+" - "+wId);
-                        log.AppendLine("Window : " + wName + " - " + wId);;
+                        log.AppendLine("Window : " + wName + " - " + wId); ;
                     }
                     line = reader.ReadLine();
                 }
@@ -142,27 +177,28 @@ namespace WitriStatic
             }
 
             //insert CompositorLayerIDs
-            while (!line.Contains("CompositorLayerIDs"))
-            {
-                line = reader.ReadLine();
-            }
-            line = reader.ReadLine();
-            //now we are at the line where the CompositorLayerIDs are stored
-            while(!line.Contains("NumberOfCompositorLayers"))
-            {
-                string lName = line.Split('=')[0].Trim();
-                string lID = line.Split('=')[1].Split(',')[0].Trim();
-                lName = lName.Replace("CompositorLayer_", "");
-                if(dM.layerDict.Keys.Contains(lName))
-                {
-                    dM.layerDict[lName].ID = lID;
-                    //Console.WriteLine("Window : "+lName+" - "+lID);
-                    log.AppendLine("Window : " + lName + " - " + lID);
-                }
-                line = reader.ReadLine();
-            }
+            /* while (!line.Contains("CompositorLayerIDs"))
+             {
+                 line = reader.ReadLine();
+             }
+             line = reader.ReadLine();
+             //now we are at the line where the CompositorLayerIDs are stored
+             while(!line.Contains("NumberOfCompositorLayers"))
+             {
+                 string lName = line.Split('=')[0].Trim();
+                 string lID = line.Split('=')[1].Split(',')[0].Trim();
+                 lName = lName.Replace("CompositorLayer_", "");
+                 if(dM.layerDict.Keys.Contains(lName))
+                 {
+                     dM.layerDict[lName].ID = lID;
+                     //Console.WriteLine("Window : "+lName+" - "+lID);
+                     log.AppendLine("Window : " + lName + " - " + lID);
+                 }
+                 line = reader.ReadLine();
+             }*/
 
         }//end of loadDifferentData
+
         public static void loadMessagesData(DataModel dataModel)
         {
             string path1 = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_CEnumerations.h"));
@@ -174,12 +210,12 @@ namespace WitriStatic
                 bool read = false;
                 foreach (string line in File.ReadLines(path1))
                 {
-                    if(line.Contains("enum enFrameworkMessageID"))
+                    if (line.Contains("enum enFrameworkMessageID"))
                     {
                         read = true;
                         continue;
                     }
-                    else if(read && line.Contains("}"))
+                    else if (read && line.Contains("}"))
                     {
                         break;
                     }

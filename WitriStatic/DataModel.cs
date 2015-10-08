@@ -15,6 +15,7 @@ namespace WitriStatic
         public Dictionary<string, Section> sectionDict;
         public Dictionary<string, Buflet> bufletDict;
         public Dictionary<string, Message> messageDict;
+        public Dictionary<string, StateMachine> stateMachineDict;
         public List<string> detachedWidgets;
 
         public Dictionary<string, string> windowNameIdDict;
@@ -32,6 +33,7 @@ namespace WitriStatic
             this.sectionDict = new Dictionary<string, Section>();
             this.bufletDict = new Dictionary<string, Buflet>();
             this.messageDict = new Dictionary<string, Message>();
+            this.stateMachineDict = new Dictionary<string, StateMachine>();
 
             this.windowNameIdDict = new Dictionary<string, string>();
             this.widgetNameIdDict = new Dictionary<string, string>();
@@ -45,6 +47,7 @@ namespace WitriStatic
         public class Widget
         {
             public string Name { get; set; }
+            public string FullName { get; set; }
             public string ID { get; set; }
             public bool isDetached { get; set; }
             public string Section { get; set; }
@@ -57,6 +60,7 @@ namespace WitriStatic
             public Widget(string name)
             {
                 this.Name = name;
+                this.ID = string.Empty;
             }
             public Widget(string name, XElement xelem) : this(name)
             {
@@ -77,6 +81,7 @@ namespace WitriStatic
             public Buflet(string name)
             {
                 this.Name = name;
+                this.ID = string.Empty;
                 this.Sections = new List<string>();
             }
             public List<string> Sections;
@@ -94,6 +99,7 @@ namespace WitriStatic
             public Section(string name)
             {
                 this.Name = name;
+                this.ID = string.Empty;
             }
 
         }
@@ -108,6 +114,7 @@ namespace WitriStatic
             public Window(string name)
             {
                 this.Name = name;
+                this.ID = string.Empty;
             }
         }
         public class Compositor
@@ -117,12 +124,14 @@ namespace WitriStatic
             public Compositor(string name)
             {
                 this.Name = name;
+                this.ID = string.Empty;
             }
             Dictionary<string, Layer> layers;
         }
         public class Layer
         {
-            public string Name { get; set; }
+            public string Name { get; set; }        
+            public string FullName { get; set; }
             public string ID { get; set; }
             public string Buflet { get; set; }
             public string Section { get; set; }
@@ -130,6 +139,7 @@ namespace WitriStatic
             public Layer(string name)
             {
                 this.Name = name;
+                this.ID = string.Empty;
             }
         }
         public class Message
@@ -140,6 +150,18 @@ namespace WitriStatic
             {
                 this.Name = Name;
                 this.ID = ID;
+            }
+        }
+        public class StateMachine
+        {
+            public string Name { get; set; }
+            public string ID { get; set; }
+            Dictionary<string, string> states;
+            public StateMachine(string name)
+            {
+                this.Name = name;
+                this.ID = string.Empty;
+                states = new Dictionary<string, string>();
             }
         }
 
@@ -153,7 +175,7 @@ namespace WitriStatic
                     windowNameID += " - (" + window.ID + ")";
                 }
 
-                windowNameIdDict.Add(windowNameID, window.Name);
+                windowNameIdDict.Add(window.Name, windowNameID);
             }
             foreach (Widget widget in widgetDict.Values)
             {
@@ -166,7 +188,7 @@ namespace WitriStatic
                 {
                     widgetNameID += " - (detached)";
                 }
-                widgetNameIdDict.Add(widgetNameID, widget.Name);
+                widgetNameIdDict.Add(widget.Name, widgetNameID);
             }
             foreach (Layer layer in layerDict.Values)
             {
@@ -176,7 +198,7 @@ namespace WitriStatic
                     layerNameID += " - (" + layer.ID + ")";
                 }
 
-                layerNameIdDict.Add(layerNameID, layer.Name);
+                layerNameIdDict.Add(layer.Name, layerNameID);
             }
             foreach (Section section in sectionDict.Values)
             {
@@ -186,7 +208,7 @@ namespace WitriStatic
                     sectionNameID += " - (" + section.ID + ")";
                 }
 
-                sectionNameIdDict.Add(sectionNameID, section.Name);
+                sectionNameIdDict.Add(section.Name, sectionNameID);
             }
             foreach (Buflet buflet in bufletDict.Values)
             {
@@ -196,7 +218,7 @@ namespace WitriStatic
                     bufletNameID += " - (" + buflet.ID + ")";
                 }
 
-                bufletNameIdDict.Add(bufletNameID, buflet.Name);
+                bufletNameIdDict.Add(buflet.Name, bufletNameID);
             }
             foreach (Message message in messageDict.Values)
             {
@@ -206,7 +228,7 @@ namespace WitriStatic
                     messageNameID += " - (" + message.ID + ")";
                 }
 
-                messageNameIdDict.Add(messageNameID, message.Name);
+                messageNameIdDict.Add(message.Name, messageNameID);
             }
 
         }
