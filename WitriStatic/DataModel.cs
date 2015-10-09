@@ -16,6 +16,7 @@ namespace WitriStatic
         public Dictionary<string, Buflet> bufletDict;
         public Dictionary<string, Message> messageDict;
         public Dictionary<string, StateMachine> stateMachineDict;
+        public Dictionary<string, CompositorLayerSection> compositorLayerDict;
         public List<string> detachedWidgets;
 
         public Dictionary<string, string> windowNameIdDict;
@@ -25,6 +26,7 @@ namespace WitriStatic
         public Dictionary<string, string> bufletNameIdDict;
         public Dictionary<string, string> messageNameIdDict;
         public Dictionary<string, string> stateMachineNameIdDict;
+        public Dictionary<string, string> compositorLayerNameIdDict;
 
         public DataModel()
         {
@@ -35,6 +37,7 @@ namespace WitriStatic
             this.bufletDict = new Dictionary<string, Buflet>();
             this.messageDict = new Dictionary<string, Message>();
             this.stateMachineDict = new Dictionary<string, StateMachine>();
+            this.compositorLayerDict = new Dictionary<string, CompositorLayerSection>();
 
             this.windowNameIdDict = new Dictionary<string, string>();
             this.widgetNameIdDict = new Dictionary<string, string>();
@@ -43,6 +46,7 @@ namespace WitriStatic
             this.bufletNameIdDict = new Dictionary<string, string>();
             this.messageNameIdDict = new Dictionary<string, string>();
             this.stateMachineNameIdDict = new Dictionary<string, string>();
+            this.compositorLayerNameIdDict = new Dictionary<string, string>();
 
             this.detachedWidgets = new List<string>();
         }
@@ -142,6 +146,23 @@ namespace WitriStatic
             {
                 this.Name = name;
                 this.ID = string.Empty;
+            }
+        }
+        public class CompositorLayerSection
+        {
+            public string Name { get; set; }
+            public string ShortName { get; set; }
+            public string ID { get; set; }
+            public string Compositor { get; set; }
+            public string Layer { get; set; }
+            public string Section { get; set; }
+            public CompositorLayerSection()
+            {
+                this.ID = string.Empty;
+            }
+            public CompositorLayerSection(string name)
+            {
+                this.Name = name;
             }
         }
         public class Message
@@ -244,6 +265,17 @@ namespace WitriStatic
                 }
 
                 stateMachineNameIdDict.Add(stateMachine.Name, stateMachineNameID);
+            }
+
+            foreach (CompositorLayerSection cls in compositorLayerDict.Values)
+            {
+                string compositorLayerSectionNameID = cls.Name;
+                if (cls.ID != null)
+                {
+                    compositorLayerSectionNameID += " - (" + cls.ID + ")";
+                }
+
+                compositorLayerNameIdDict.Add(cls.Name, compositorLayerSectionNameID);
             }
         }
     }

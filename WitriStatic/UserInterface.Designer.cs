@@ -151,20 +151,20 @@ namespace WitriStatic
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(12, 136);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(579, 363);
+            this.listView1.Size = new System.Drawing.Size(600, 368);
             this.listView1.TabIndex = 11;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.Columns.Add("", 0);
             this.listView1.Columns.Add("ID", 50, HorizontalAlignment.Center);
-            this.listView1.Columns.Add("Search Result", 430);
+            this.listView1.Columns.Add("Search Result", 460);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             // 
             // listView2
             // 
-            this.listView2.Location = new System.Drawing.Point(610, 32);
+            this.listView2.Location = new System.Drawing.Point(625, 33);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(454, 470);
+            this.listView2.Size = new System.Drawing.Size(662, 470);
             this.listView2.TabIndex = 12;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
@@ -191,14 +191,14 @@ namespace WitriStatic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1078, 515);
+            this.ClientSize = new System.Drawing.Size(1300, 515);
             this.Controls.Add(this.listView2);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Name = "UserInterface";
-            this.Text = "WITRI Offline";
+            this.Text = "WITRI Static";
             this.ResumeLayout(false);
             this.PerformLayout();
 

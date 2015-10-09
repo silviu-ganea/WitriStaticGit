@@ -170,6 +170,7 @@ namespace WitriStatic
                 string compositor_name = string.Empty;
                 string compositor_destinationBuflet = string.Empty;
                 string layer_name = string.Empty;
+                string bufletSectionID = string.Empty;
 
                 if (compositor_xel.Attribute("Name") != null)
                 {
@@ -193,7 +194,7 @@ namespace WitriStatic
                     }
                     if (layer_xel.Attribute("BufletSectionID") != null)
                     {
-                        string bufletSectionID = layer_xel.Attribute("BufletSectionID").Value;
+                        bufletSectionID = layer_xel.Attribute("BufletSectionID").Value;
                         string temp_widgetName = bufletSectionID.Replace("_Section", "");
 
                         if (widget_dict.ContainsKey(temp_widgetName))
@@ -211,6 +212,19 @@ namespace WitriStatic
                             layer_dict[layer_name].Buflet = section_dict[bufletSectionID].Buflet;
                         }
                     }
+                    if(layer_xel.Attribute("BufletSectionID") != null && layer_name != string.Empty && compositor_name != string.Empty)
+                    {
+                        DataModel.CompositorLayerSection tempCompLayer = new DataModel.CompositorLayerSection();
+                        string tempName = "CompositorLayer" + "_" + compositor_name + "_" + layer_name + "_" + layer_xel.Attribute("BufletSectionID").Value;
+                        string tempShortName = layer_name + "_" + layer_xel.Attribute("BufletSectionID").Value;
+                        tempCompLayer.Name = tempName;
+                        tempCompLayer.ShortName = tempShortName;
+                        tempCompLayer.Compositor = compositor_name;
+                        tempCompLayer.Layer = layer_name;
+                        tempCompLayer.Section = layer_xel.Attribute("BufletSectionID").Value;
+                        dataModel.compositorLayerDict.Add(tempName, tempCompLayer);
+                    }
+
                 }
             }
         }

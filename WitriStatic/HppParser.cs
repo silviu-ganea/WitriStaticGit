@@ -268,6 +268,7 @@ namespace WitriStatic
     class HppParser
     {
         public static string framePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "..//..//..//"));
+        //public static string framePath = @"D:\casdev\FRAMES\213_EL_E009.4_pre40 - TARGET";
         public static string adaptBrutusPath = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\"));
         static string filePath = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_VisualResourceIDs.hpp"));
         static string filePathWidget = Path.GetFullPath(Path.Combine(framePath, @"adapt\gen\brutus\WRS_VisualResourceIDs.hpp"));
@@ -437,25 +438,24 @@ namespace WitriStatic
             }
 
             //insert CompositorLayerIDs
-            /* while (!line.Contains("CompositorLayerIDs"))
-             {
-                 line = reader.ReadLine();
-             }
-             line = reader.ReadLine();
-             //now we are at the line where the CompositorLayerIDs are stored
-             while(!line.Contains("NumberOfCompositorLayers"))
-             {
-                 string lName = line.Split('=')[0].Trim();
-                 string lID = line.Split('=')[1].Split(',')[0].Trim();
-                 lName = lName.Replace("CompositorLayer_", "");
-                 if(dM.layerDict.Keys.Contains(lName))
-                 {
-                     dM.layerDict[lName].ID = lID;
-                     //Console.WriteLine("Window : "+lName+" - "+lID);
-                     log.AppendLine("Window : " + lName + " - " + lID);
-                 }
-                 line = reader.ReadLine();
-             }*/
+            while (!line.Contains("CompositorLayerIDs"))
+            {
+                line = reader.ReadLine();
+            }
+            line = reader.ReadLine();
+            //now we are at the line where the CompositorLayerIDs are stored
+            while (!line.Contains("NumberOfCompositorLayers"))
+            {
+                string lName = line.Split('=')[0].Trim();
+                string lID = line.Split('=')[1].Split(',')[0].Trim();
+                //lName = lName.Replace("CompositorLayer_", "");
+                if (dM.compositorLayerDict.Keys.Contains(lName))
+                {
+                    dM.compositorLayerDict[lName].ID = lID;
+                    log.AppendLine("Window : " + lName + " - " + lID);
+                }
+                line = reader.ReadLine();
+            }
 
         }//end of loadDifferentData
 

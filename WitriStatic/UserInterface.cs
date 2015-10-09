@@ -97,9 +97,9 @@ namespace WitriStatic
         }
         private void radioButton_Layer_func()
         {
-            foreach (var layerNameId_kvp in dataModel.layerNameIdDict)
+            foreach (var clsNameId_kvp in dataModel.compositorLayerNameIdDict)
             {
-                ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.layerDict[layerNameId_kvp.Key].ID, layerNameId_kvp.Key });
+                ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.compositorLayerDict[clsNameId_kvp.Key].ID, dataModel.compositorLayerDict[clsNameId_kvp.Key].ShortName });
                 listView1.Items.Add(lvi);
             }
         }
@@ -132,125 +132,125 @@ namespace WitriStatic
            
         }
 
-        private void radioButton_Widget_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton_Widget.Checked)
-            {
-                this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-                if (listView1.Columns.Count < 4)
-                {
-                    listView1.Columns.Add("isDetached", 70, HorizontalAlignment.Center);
-                }
+        //private void radioButton_Widget_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (radioButton_Widget.Checked)
+        //    {
+        //        this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        //        this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+        //        if (listView1.Columns.Count < 4)
+        //        {
+        //            listView1.Columns.Add("isDetached", 70, HorizontalAlignment.Center);
+        //        }
                 
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
-                foreach(var widgetNameId_kvp in dataModel.widgetNameIdDict)
-                {
-                    ListViewItem lvi = new ListViewItem(new string[]{"", dataModel.widgetDict[widgetNameId_kvp.Key].ID, widgetNameId_kvp.Key," "});
-                    if (dataModel.widgetDict[widgetNameId_kvp.Key].isDetached)
-                    {
-                        lvi.SubItems[3].Text = "detached";
-                        //lvi.ForeColor = Color.DarkGreen;
-                    }
+        //        listView1.Items.Clear();
+        //        listView1.BeginUpdate();
+        //        foreach(var widgetNameId_kvp in dataModel.widgetNameIdDict)
+        //        {
+        //            ListViewItem lvi = new ListViewItem(new string[]{"", dataModel.widgetDict[widgetNameId_kvp.Key].ID, widgetNameId_kvp.Key," "});
+        //            if (dataModel.widgetDict[widgetNameId_kvp.Key].isDetached)
+        //            {
+        //                lvi.SubItems[3].Text = "detached";
+        //                //lvi.ForeColor = Color.DarkGreen;
+        //            }
 
-                    listView1.Items.Add(lvi);
+        //            listView1.Items.Add(lvi);
 
-                }
-                listView1.EndUpdate();
+        //        }
+        //        listView1.EndUpdate();
 
-            }
-        }
-        private void radioButton_Window_CheckedChanged(object sender, EventArgs e)
-        {
-            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            if (radioButton_Window.Checked)
-            {
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
+        //    }
+        //}
+        //private void radioButton_Window_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+        //    if (radioButton_Window.Checked)
+        //    {
+        //        listView1.Items.Clear();
+        //        listView1.BeginUpdate();
 
-                if(listView1.Columns.Count > 3)
-                {
-                    listView1.Columns[3].Dispose();
-                }
+        //        if(listView1.Columns.Count > 3)
+        //        {
+        //            listView1.Columns[3].Dispose();
+        //        }
 
-                foreach (var windowNameId_kvp in dataModel.windowNameIdDict)
-                {
-                    ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.windowDict[windowNameId_kvp.Key].ID, windowNameId_kvp.Key});
-                    listView1.Items.Add(lvi);
-                }
-                listView1.EndUpdate();
-            }
-        }
-        private void radioButton_Message_CheckedChanged(object sender, EventArgs e)
-        {
-            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            if (radioButton_Message.Checked)
-            {
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
+        //        foreach (var windowNameId_kvp in dataModel.windowNameIdDict)
+        //        {
+        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.windowDict[windowNameId_kvp.Key].ID, windowNameId_kvp.Key});
+        //            listView1.Items.Add(lvi);
+        //        }
+        //        listView1.EndUpdate();
+        //    }
+        //}
+        //private void radioButton_Message_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+        //    if (radioButton_Message.Checked)
+        //    {
+        //        listView1.Items.Clear();
+        //        listView1.BeginUpdate();
 
-                if (listView1.Columns.Count > 3)
-                {
-                    listView1.Columns[3].Dispose();
-                }
+        //        if (listView1.Columns.Count > 3)
+        //        {
+        //            listView1.Columns[3].Dispose();
+        //        }
 
-                foreach (var messageNameId_kvp in dataModel.messageNameIdDict)
-                {
-                    ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.messageDict[messageNameId_kvp.Key].ID, messageNameId_kvp.Key });
-                    listView1.Items.Add(lvi);
-                }
-                listView1.EndUpdate();
-            }
-        }
-        private void radioButton_CompositorLayer_CheckedChanged(object sender, EventArgs e)
-        {
-            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            if (radioButton_CompositorLayer.Checked)
-            {
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
+        //        foreach (var messageNameId_kvp in dataModel.messageNameIdDict)
+        //        {
+        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.messageDict[messageNameId_kvp.Key].ID, messageNameId_kvp.Key });
+        //            listView1.Items.Add(lvi);
+        //        }
+        //        listView1.EndUpdate();
+        //    }
+        //}
+        //private void radioButton_CompositorLayer_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+        //    if (radioButton_CompositorLayer.Checked)
+        //    {
+        //        listView1.Items.Clear();
+        //        listView1.BeginUpdate();
 
-                if (listView1.Columns.Count > 3)
-                {
-                    listView1.Columns[3].Dispose();
-                }
+        //        if (listView1.Columns.Count > 3)
+        //        {
+        //            listView1.Columns[3].Dispose();
+        //        }
 
-                foreach (var layerNameId_kvp in dataModel.layerNameIdDict)
-                {
-                    ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.layerDict[layerNameId_kvp.Key].ID, layerNameId_kvp.Key });
-                    listView1.Items.Add(lvi);
-                }
-                listView1.EndUpdate();
-            }
-        }
-        private void radioButton_Buflet_CheckedChanged(object sender, EventArgs e)
-        {
+        //        foreach (var clsNameID_kvp in dataModel.compositorLayerNameIdDict)
+        //        {
+        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.compositorLayerDict[clsNameID_kvp.Key].ID, clsNameID_kvp.Key });
+        //            listView1.Items.Add(lvi);
+        //        }
+        //        listView1.EndUpdate();
+        //    }
+        //}
+        //private void radioButton_Buflet_CheckedChanged(object sender, EventArgs e)
+        //{
             
-            if (radioButton_Buflet.Checked)
-            {
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
+        //    if (radioButton_Buflet.Checked)
+        //    {
+        //        listView1.Items.Clear();
+        //        listView1.BeginUpdate();
 
-                if (listView1.Columns.Count > 3)
-                {
-                    listView1.Columns[3].Dispose();
-                }
+        //        if (listView1.Columns.Count > 3)
+        //        {
+        //            listView1.Columns[3].Dispose();
+        //        }
 
-                foreach (var bufletNameId_kvp in dataModel.bufletNameIdDict)
-                {
-                    ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.bufletDict[bufletNameId_kvp.Key].ID, bufletNameId_kvp.Key });
-                    listView1.Items.Add(lvi);
-                }
+        //        foreach (var bufletNameId_kvp in dataModel.bufletNameIdDict)
+        //        {
+        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.bufletDict[bufletNameId_kvp.Key].ID, bufletNameId_kvp.Key });
+        //            listView1.Items.Add(lvi);
+        //        }
 
-                selectFirstItemAndResize(listView1, listView2);
+        //        selectFirstItemAndResize(listView1, listView2);
 
-                listView1.EndUpdate();
-            }
-        }
+        //        listView1.EndUpdate();
+        //    }
+        //}
         
         
 
@@ -311,11 +311,11 @@ namespace WitriStatic
                 string searchText = textBox1.Text.Trim().ToLower();
                 listView1.Items.Clear();
                 listView1.BeginUpdate();
-                foreach (var layer_kvp in dataModel.layerNameIdDict)
+                foreach (var cls_kvp in dataModel.compositorLayerNameIdDict)
                 {
-                    if (layer_kvp.Value.ToLower().Contains(searchText))
+                    if (cls_kvp.Value.ToLower().Contains(searchText))
                     {
-                        ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.layerDict[layer_kvp.Key].ID, layer_kvp.Key });
+                        ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.compositorLayerDict[cls_kvp.Key].ID, dataModel.compositorLayerDict[cls_kvp.Key].ShortName });
                         listView1.Items.Add(lvi);
                     }
                 }
@@ -406,24 +406,33 @@ namespace WitriStatic
                 }
                 else if (radioButton_CompositorLayer.Checked)
                 {
-                    foreach (System.Reflection.PropertyInfo attr in dataModel.layerDict[selectedText].GetType().GetProperties())
+                    foreach(var compositorLayer_kvp in dataModel.compositorLayerDict)
                     {
-                        if(attr.PropertyType == typeof(string))
+                        if(compositorLayer_kvp.Value.ShortName == selectedText)
                         {
-                            string attrValueString;
-                            var attrValue = attr.GetValue(dataModel.layerDict[selectedText], null);
-                            if(attrValue != null)
+                            foreach (System.Reflection.PropertyInfo attr in compositorLayer_kvp.Value.GetType().GetProperties())
                             {
-                                attrValueString = attrValue.ToString();
+                                if (attr.PropertyType == typeof(string))
+                                {
+                                    string attrValueString;
+                                    var attrValue = attr.GetValue(compositorLayer_kvp.Value, null);
+                                    if (attrValue != null)
+                                    {
+                                        attrValueString = attrValue.ToString();
+                                    }
+                                    else
+                                    {
+                                        attrValueString = string.Empty;
+                                    }
+                                    string attrName = attr.Name.ToString();
+                                    if (attrName != "ShortName")
+                                    {
+                                        listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
+                                    }
+                                }
                             }
-                            else
-                            {
-                                attrValueString = string.Empty;
-                            }
-                            string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
                         }
-                    }
+                    } 
                 }
                 else if (radioButton_Buflet.Checked)
                 {
