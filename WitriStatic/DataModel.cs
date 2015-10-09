@@ -24,6 +24,7 @@ namespace WitriStatic
         public Dictionary<string, string> sectionNameIdDict;
         public Dictionary<string, string> bufletNameIdDict;
         public Dictionary<string, string> messageNameIdDict;
+        public Dictionary<string, string> stateMachineNameIdDict;
 
         public DataModel()
         {
@@ -41,6 +42,7 @@ namespace WitriStatic
             this.sectionNameIdDict = new Dictionary<string, string>();
             this.bufletNameIdDict = new Dictionary<string, string>();
             this.messageNameIdDict = new Dictionary<string, string>();
+            this.stateMachineNameIdDict = new Dictionary<string, string>();
 
             this.detachedWidgets = new List<string>();
         }
@@ -156,7 +158,9 @@ namespace WitriStatic
         {
             public string Name { get; set; }
             public string ID { get; set; }
-            Dictionary<string, string> states;
+            public string FullName { get; internal set; }
+
+            public Dictionary<string, string> states;
             public StateMachine(string name)
             {
                 this.Name = name;
@@ -231,6 +235,16 @@ namespace WitriStatic
                 messageNameIdDict.Add(message.Name, messageNameID);
             }
 
+            foreach (StateMachine stateMachine in stateMachineDict.Values)
+            {
+                string stateMachineNameID = stateMachine.Name;
+                if (stateMachine.ID != null)
+                {
+                    stateMachineNameID += " - (" + stateMachine.ID + ")";
+                }
+
+                stateMachineNameIdDict.Add(stateMachine.Name, stateMachineNameID);
+            }
         }
     }
 }

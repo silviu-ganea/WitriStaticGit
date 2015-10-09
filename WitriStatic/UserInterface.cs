@@ -121,7 +121,11 @@ namespace WitriStatic
         }
         private void radioButton_StateMachine_func()
         {
-            
+            foreach (var stateMachineNameId_kvp in dataModel.stateMachineNameIdDict)
+            {
+                ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.stateMachineDict[stateMachineNameId_kvp.Key].ID, stateMachineNameId_kvp.Key });
+                listView1.Items.Add(lvi);
+            }
         }
         private void radioButton_Animation_func()
         {
@@ -332,6 +336,21 @@ namespace WitriStatic
                 }
                 listView1.EndUpdate();
             }
+            else if (radioButton_StateMachine.Checked)
+            {
+                string searchText = textBox1.Text.Trim().ToLower();
+                listView1.Items.Clear();
+                listView1.BeginUpdate();
+                foreach (var stateMachineNameId_kvp in dataModel.stateMachineNameIdDict)
+                {
+                    if (stateMachineNameId_kvp.Value.ToLower().Contains(searchText))
+                    {
+                        ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.stateMachineDict[stateMachineNameId_kvp.Key].ID, stateMachineNameId_kvp.Key });
+                        listView1.Items.Add(lvi);
+                    }
+                }
+                listView1.EndUpdate();
+            }
 
         }
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -447,6 +466,15 @@ namespace WitriStatic
                             listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
                         }
                     }
+                }
+                else if (radioButton_StateMachine.Checked)
+                {
+                    //listView2.Items.Add()
+                    foreach (var stateMachineState in dataModel.stateMachineDict[selectedText].states)
+                    {
+                        listView2.Items.Add(new ListViewItem(new String[] { stateMachineState.Key, stateMachineState.Value }));
+                    }
+                    
                 }
             }
             listView2.EndUpdate();
