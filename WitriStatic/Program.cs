@@ -5,12 +5,14 @@ using System.Text;
 using System.Xml.Linq;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 
 
 namespace WitriStatic
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             //DataModel dataModel = new DataModel();

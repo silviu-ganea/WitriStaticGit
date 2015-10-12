@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,50 +27,58 @@ namespace WitriStatic
         }
         private void radioButtons_CheckedChanged(object sender, EventArgs e)
         {
-            
-            listView1.Items.Clear();
-            listView1.BeginUpdate();
+            this.listView1.ListViewItemSorter = null;
+            if (textBox1.Text.Trim() == string.Empty)
+            {
+                listView1.Items.Clear();
+                listView1.BeginUpdate();
 
-            if (listView1.Columns.Count > 3)
-            {
-                listView1.Columns[3].Dispose();
-            }
+                if (listView1.Columns.Count > 3)
+                {
+                    listView1.Columns[3].Dispose();
+                }
 
-            if (radioButton_Widget.Checked)
-            {
-                radioButton_Widget_func();
-            }
-            else if (radioButton_Message.Checked)
-            {
-                radioButton_Message_func();
-            }
-            else if (radioButton_CompositorLayer.Checked)
-            {
-                radioButton_Layer_func();
-            }
-            else if (radioButton_Buflet.Checked)
-            {
-                radioButton_Buflet_func();
-            }
-            else if (radioButton_Window.Checked)
-            {
-                radioButton_Window_func();
-            }
-            else if (radioButton_StateMachine.Checked)
-            {
-                radioButton_StateMachine_func();
-            }
-            else if (radioButton_Animation.Checked)
-            {
-                radioButton_Animation_func();
-            }
+                if (radioButton_Widget.Checked)
+                {
+                    radioButton_Widget_func();
+                }
+                else if (radioButton_Message.Checked)
+                {
+                    radioButton_Message_func();
+                }
+                else if (radioButton_CompositorLayer.Checked)
+                {
+                    radioButton_Layer_func();
+                }
+                else if (radioButton_Buflet.Checked)
+                {
+                    radioButton_Buflet_func();
+                }
+                else if (radioButton_Window.Checked)
+                {
+                    radioButton_Window_func();
+                }
+                else if (radioButton_StateMachine.Checked)
+                {
+                    radioButton_StateMachine_func();
+                }
+                else if (radioButton_Animation.Checked)
+                {
+                    radioButton_Animation_func();
+                }
 
-            selectFirstItemAndResize(listView1, listView2);
+                selectFirstItemAndResize(listView1, listView2);
 
-            listView1.EndUpdate();  
+                listView1.EndUpdate();
+            }
+            else
+            {
+                textBox1_TextChanged(this, new EventArgs());
+            }
         }
         private void radioButton_Widget_func()
         {
+            listView1.BeginUpdate();
             if (listView1.Columns.Count < 4)
             {
                 listView1.Columns.Add("isDetached", 70, HorizontalAlignment.Center);
@@ -86,14 +95,17 @@ namespace WitriStatic
                 listView1.Items.Add(lvi);
 
             }
+            listView1.EndUpdate();
         }
         private void radioButton_Message_func()
         {
+            listView1.BeginUpdate();
             foreach (var messageNameId_kvp in dataModel.messageNameIdDict)
             {
                 ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.messageDict[messageNameId_kvp.Key].ID, messageNameId_kvp.Key });
                 listView1.Items.Add(lvi);
             }
+            listView1.EndUpdate();
         }
         private void radioButton_Layer_func()
         {
@@ -132,130 +144,10 @@ namespace WitriStatic
            
         }
 
-        //private void radioButton_Widget_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (radioButton_Widget.Checked)
-        //    {
-        //        this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        //        this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-        //        if (listView1.Columns.Count < 4)
-        //        {
-        //            listView1.Columns.Add("isDetached", 70, HorizontalAlignment.Center);
-        //        }
-                
-        //        listView1.Items.Clear();
-        //        listView1.BeginUpdate();
-        //        foreach(var widgetNameId_kvp in dataModel.widgetNameIdDict)
-        //        {
-        //            ListViewItem lvi = new ListViewItem(new string[]{"", dataModel.widgetDict[widgetNameId_kvp.Key].ID, widgetNameId_kvp.Key," "});
-        //            if (dataModel.widgetDict[widgetNameId_kvp.Key].isDetached)
-        //            {
-        //                lvi.SubItems[3].Text = "detached";
-        //                //lvi.ForeColor = Color.DarkGreen;
-        //            }
-
-        //            listView1.Items.Add(lvi);
-
-        //        }
-        //        listView1.EndUpdate();
-
-        //    }
-        //}
-        //private void radioButton_Window_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-        //    if (radioButton_Window.Checked)
-        //    {
-        //        listView1.Items.Clear();
-        //        listView1.BeginUpdate();
-
-        //        if(listView1.Columns.Count > 3)
-        //        {
-        //            listView1.Columns[3].Dispose();
-        //        }
-
-        //        foreach (var windowNameId_kvp in dataModel.windowNameIdDict)
-        //        {
-        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.windowDict[windowNameId_kvp.Key].ID, windowNameId_kvp.Key});
-        //            listView1.Items.Add(lvi);
-        //        }
-        //        listView1.EndUpdate();
-        //    }
-        //}
-        //private void radioButton_Message_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-        //    if (radioButton_Message.Checked)
-        //    {
-        //        listView1.Items.Clear();
-        //        listView1.BeginUpdate();
-
-        //        if (listView1.Columns.Count > 3)
-        //        {
-        //            listView1.Columns[3].Dispose();
-        //        }
-
-        //        foreach (var messageNameId_kvp in dataModel.messageNameIdDict)
-        //        {
-        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.messageDict[messageNameId_kvp.Key].ID, messageNameId_kvp.Key });
-        //            listView1.Items.Add(lvi);
-        //        }
-        //        listView1.EndUpdate();
-        //    }
-        //}
-        //private void radioButton_CompositorLayer_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        //    this.listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-        //    if (radioButton_CompositorLayer.Checked)
-        //    {
-        //        listView1.Items.Clear();
-        //        listView1.BeginUpdate();
-
-        //        if (listView1.Columns.Count > 3)
-        //        {
-        //            listView1.Columns[3].Dispose();
-        //        }
-
-        //        foreach (var clsNameID_kvp in dataModel.compositorLayerNameIdDict)
-        //        {
-        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.compositorLayerDict[clsNameID_kvp.Key].ID, clsNameID_kvp.Key });
-        //            listView1.Items.Add(lvi);
-        //        }
-        //        listView1.EndUpdate();
-        //    }
-        //}
-        //private void radioButton_Buflet_CheckedChanged(object sender, EventArgs e)
-        //{
-            
-        //    if (radioButton_Buflet.Checked)
-        //    {
-        //        listView1.Items.Clear();
-        //        listView1.BeginUpdate();
-
-        //        if (listView1.Columns.Count > 3)
-        //        {
-        //            listView1.Columns[3].Dispose();
-        //        }
-
-        //        foreach (var bufletNameId_kvp in dataModel.bufletNameIdDict)
-        //        {
-        //            ListViewItem lvi = new ListViewItem(new string[] { "", dataModel.bufletDict[bufletNameId_kvp.Key].ID, bufletNameId_kvp.Key });
-        //            listView1.Items.Add(lvi);
-        //        }
-
-        //        selectFirstItemAndResize(listView1, listView2);
-
-        //        listView1.EndUpdate();
-        //    }
-        //}
-        
-        
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            listView1.ListViewItemSorter = null;
+
             if (radioButton_Widget.Checked)
             {
                 string searchText = textBox1.Text.Trim().ToLower();
@@ -363,12 +255,13 @@ namespace WitriStatic
                 string selectedText = listView1.SelectedItems[0].SubItems[2].Text;
                 if (radioButton_Widget.Checked)
                 {
-                    listView2.Items.Add(new ListViewItem(new String[] { "Is Detached", Convert.ToString(dataModel.widgetDict[selectedText].isDetached) }));
+                    //listView2.Items.Add(new ListViewItem(new String[] {"", "Is Detached", Convert.ToString(dataModel.widgetDict[selectedText].isDetached) }));
                     foreach (System.Reflection.PropertyInfo attr in dataModel.widgetDict[selectedText].GetType().GetProperties())
                     {
                         if (attr.PropertyType == typeof(string))
                         {
                             string attrValueString;
+                            string ID = string.Empty;
                             var attrValue = attr.GetValue(dataModel.widgetDict[selectedText], null);
                             if (attrValue != null)
                             {
@@ -379,7 +272,39 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
+                            if (new[]{ "ID", "Name" }.Contains(attrName))
+                            {
+                                continue;
+                            }
+                            else if (attrName == "Section" && attrValueString != null && attrValueString != string.Empty)
+                            {
+                                ID = dataModel.sectionDict[attrValueString].ID;
+                            }
+                            else if (attrName == "Buflet" && attrValueString != null && attrValueString != string.Empty)
+                            {
+                                ID = dataModel.bufletDict[attrValueString].ID;
+                            }
+                            else if (attrName == "Window" && attrValueString != null && attrValueString != string.Empty)
+                            {
+                                ID = dataModel.windowDict[attrValueString].ID;
+                            }
+                            else if (attrName == "Compositor" && attrValueString != null && attrValueString != string.Empty)
+                            {
+                                foreach(var compositorLS_kvp in dataModel.compositorLayerDict)
+                                {
+                                    if(compositorLS_kvp.Value.ShortName == attrValueString)
+                                    {
+                                        ID = compositorLS_kvp.Value.ID;
+                                        break;
+                                    }
+                                }
+                            }
+                            //else if (attrName == "Layer" && attrValueString != null && attrValueString != string.Empty)
+                            //{
+                            //    ID = dataModel.windowDict[attrValueString].ID;
+                            //}
+
+                            listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, attrValueString }));
                         }
                     }
                 }
@@ -400,7 +325,7 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
+                            listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
                         }
                     }
                 }
@@ -427,7 +352,7 @@ namespace WitriStatic
                                     string attrName = attr.Name.ToString();
                                     if (attrName != "ShortName")
                                     {
-                                        listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
+                                        listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
                                     }
                                 }
                             }
@@ -451,7 +376,7 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
+                            listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
                         }
                     }
                 }
@@ -472,7 +397,7 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { attrName, attrValueString }));
+                            listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
                         }
                     }
                 }
@@ -481,7 +406,7 @@ namespace WitriStatic
                     //listView2.Items.Add()
                     foreach (var stateMachineState in dataModel.stateMachineDict[selectedText].states)
                     {
-                        listView2.Items.Add(new ListViewItem(new String[] { stateMachineState.Key, stateMachineState.Value }));
+                        listView2.Items.Add(new ListViewItem(new String[] { "", stateMachineState.Key, stateMachineState.Value }));
                     }
                     
                 }
@@ -508,6 +433,74 @@ namespace WitriStatic
             //string text = textBox1.Text.Trim();
             // listView1.FindItemWithText(text);
 
+        }
+
+        private void listView1_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
+        {
+            this.listView1.ListViewItemSorter = new ListViewItemComparer(e.Column);
+            this.listView1.Sort();
+        }
+
+        private void listView1_menuCopyID_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(listView1.SelectedItems[0].SubItems[1].Text);
+        }
+        private void listView1_menuCopyName_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(listView1.SelectedItems[0].SubItems[2].Text);
+        }
+        private void listView2_menuCopyID_Click(object sender, EventArgs e)
+        {
+            if(listView2.SelectedItems[0].SubItems[0].Text != null && listView2.SelectedItems[0].SubItems[0].Text != string.Empty)
+            {
+                Clipboard.SetText(listView2.SelectedItems[0].SubItems[0].Text);
+            }
+            
+        }
+        private void listView2_menuCopyName_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(listView2.SelectedItems[0].SubItems[2].Text);
+        }
+    }
+    class ListViewItemComparer : IComparer
+    {
+        private int col;
+        public ListViewItemComparer()
+        {
+            col = 0;
+        }
+        public ListViewItemComparer(int column)
+        {
+            col = column;
+        }
+        public int Compare(object x, object y)
+        {
+            int returnVal = -1;
+            if (col == 1)
+            {
+                if(((ListViewItem)x).SubItems[col].Text != string.Empty && ((ListViewItem)y).SubItems[col].Text != string.Empty)
+                {
+                    if (Int32.Parse(((ListViewItem)x).SubItems[col].Text) > Int32.Parse(((ListViewItem)y).SubItems[col].Text))
+                    {
+                        return 1;
+                    }
+                } 
+            }
+            else if(col == 3)
+            {
+                if(((ListViewItem)x).SubItems[col] != null){
+                    if (((ListViewItem)x).SubItems[col].Text != "detached")
+                    {
+                        return 1;
+                    }
+                }
+                
+            }
+            else
+            {
+                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+            }
+            return returnVal;
         }
     }
 }

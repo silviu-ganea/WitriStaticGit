@@ -159,17 +159,39 @@ namespace WitriStatic
             this.listView1.Columns.Add("ID", 50, HorizontalAlignment.Center);
             this.listView1.Columns.Add("Search Result", 460);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
+            
+            ContextMenuStrip contextMenuListView1 = new ContextMenuStrip();
+            ToolStripMenuItem lv1_menuItem_CopyID = new ToolStripMenuItem("Copy ID");
+            ToolStripMenuItem lv1_menuItem_CopyName = new ToolStripMenuItem("Copy Name");
+            lv1_menuItem_CopyID.Click += new EventHandler(listView1_menuCopyID_Click);
+            lv1_menuItem_CopyName.Click += new EventHandler(listView1_menuCopyName_Click);
+            contextMenuListView1.Items.Add(lv1_menuItem_CopyID);
+            contextMenuListView1.Items.Add(lv1_menuItem_CopyName);
+            listView1.ContextMenuStrip = contextMenuListView1;
             // 
             // listView2
             // 
+            this.listView2.FullRowSelect = true;
             this.listView2.Location = new System.Drawing.Point(625, 33);
             this.listView2.Name = "listView2";
             this.listView2.Size = new System.Drawing.Size(662, 470);
             this.listView2.TabIndex = 12;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
+            this.listView2.Columns.Add("ID");
             this.listView2.Columns.Add("Property");
             this.listView2.Columns.Add("Value");
+            //this.listView2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView2_MouseClick);
+
+            ContextMenuStrip contextMenuListView2 = new ContextMenuStrip();
+            ToolStripMenuItem lv2_menuItem_CopyID = new ToolStripMenuItem("Copy ID");
+            ToolStripMenuItem lv2_menuItem_CopyName = new ToolStripMenuItem("Copy Name");
+            lv2_menuItem_CopyID.Click += new EventHandler(listView2_menuCopyID_Click);
+            lv2_menuItem_CopyName.Click += new EventHandler(listView2_menuCopyName_Click);
+            contextMenuListView2.Items.Add(lv2_menuItem_CopyID);
+            contextMenuListView2.Items.Add(lv2_menuItem_CopyName);
+            listView2.ContextMenuStrip = contextMenuListView2;
             // 
             // groupBox1
             // 
@@ -201,9 +223,7 @@ namespace WitriStatic
             this.Text = "WITRI Static";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
-
         #endregion
 
         private System.Windows.Forms.Label label1;
@@ -215,7 +235,7 @@ namespace WitriStatic
         private System.Windows.Forms.RadioButton radioButton_Message;
         private System.Windows.Forms.RadioButton radioButton_CompositorLayer;
         private System.Windows.Forms.RadioButton radioButton_Animation;
-        private System.Windows.Forms.ListView listView1;
+        private ListView listView1;
         private ListView listView2;
         private GroupBox groupBox1;
     }
