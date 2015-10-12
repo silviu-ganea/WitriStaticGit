@@ -76,6 +76,7 @@ namespace WitriStatic
         public class Buflet
         {
             public string Name { get; set; }
+            public string FullName { get; set; }
             public string ID { get; set; }
             public string Is3D { get; set; }
             public string Surface { get; set; }
@@ -112,6 +113,7 @@ namespace WitriStatic
         public class Window
         {
             public string Name { get; set; }
+            public string FullName { get; set; }
             public string ID { get; set; }
             public string Painter { get; set; }
             public string Buflet { get; set; }

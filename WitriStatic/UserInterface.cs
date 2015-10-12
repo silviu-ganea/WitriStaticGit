@@ -28,15 +28,14 @@ namespace WitriStatic
         private void radioButtons_CheckedChanged(object sender, EventArgs e)
         {
             this.listView1.ListViewItemSorter = null;
+            if (listView1.Columns.Count > 3)
+            {
+                listView1.Columns[3].Dispose();
+            }
             if (textBox1.Text.Trim() == string.Empty)
             {
                 listView1.Items.Clear();
                 listView1.BeginUpdate();
-
-                if (listView1.Columns.Count > 3)
-                {
-                    listView1.Columns[3].Dispose();
-                }
 
                 if (radioButton_Widget.Checked)
                 {
@@ -147,13 +146,17 @@ namespace WitriStatic
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             listView1.ListViewItemSorter = null;
+            listView1.Items.Clear();
+            listView1.BeginUpdate();
+            string searchText = textBox1.Text.Trim().ToLower();
 
             if (radioButton_Widget.Checked)
             {
-                string searchText = textBox1.Text.Trim().ToLower();
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
-                foreach(var widgetNameIdDetached in dataModel.widgetNameIdDict)
+                if (listView1.Columns.Count < 4)
+                {
+                    listView1.Columns.Add("isDetached", 70, HorizontalAlignment.Center);
+                }
+                foreach (var widgetNameIdDetached in dataModel.widgetNameIdDict)
                 {
                     if (widgetNameIdDetached.Value.ToLower().Contains(searchText))
                     {
@@ -163,16 +166,11 @@ namespace WitriStatic
                             lvi.SubItems[3].Text = "detached";
                         }
                         listView1.Items.Add(lvi);
-                        
                     }
                 }
-                listView1.EndUpdate();
             }
             else if (radioButton_Window.Checked)
             {
-                string searchText = textBox1.Text.Trim().ToLower();
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
                 foreach (var window_kvp in dataModel.windowNameIdDict)
                 {
                     if (window_kvp.Value.ToLower().Contains(searchText))
@@ -181,13 +179,9 @@ namespace WitriStatic
                         listView1.Items.Add(lvi);
                     }
                 }
-                listView1.EndUpdate();
             }
             else if (radioButton_Message.Checked)
             {
-                string searchText = textBox1.Text.Trim().ToLower();
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
                 foreach (var message_kvp in dataModel.messageNameIdDict)
                 {
                     if (message_kvp.Value.ToLower().Contains(searchText))
@@ -196,13 +190,9 @@ namespace WitriStatic
                         listView1.Items.Add(lvi);
                     }
                 }
-                listView1.EndUpdate();
             }
             else if (radioButton_CompositorLayer.Checked)
             {
-                string searchText = textBox1.Text.Trim().ToLower();
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
                 foreach (var cls_kvp in dataModel.compositorLayerNameIdDict)
                 {
                     if (cls_kvp.Value.ToLower().Contains(searchText))
@@ -211,13 +201,9 @@ namespace WitriStatic
                         listView1.Items.Add(lvi);
                     }
                 }
-                listView1.EndUpdate();
             }
             else if (radioButton_Buflet.Checked)
             {
-                string searchText = textBox1.Text.Trim().ToLower();
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
                 foreach (var bufletNameId_kvp in dataModel.bufletNameIdDict)
                 {
                     if (bufletNameId_kvp.Value.ToLower().Contains(searchText))
@@ -226,13 +212,9 @@ namespace WitriStatic
                         listView1.Items.Add(lvi);
                     }
                 }
-                listView1.EndUpdate();
             }
             else if (radioButton_StateMachine.Checked)
             {
-                string searchText = textBox1.Text.Trim().ToLower();
-                listView1.Items.Clear();
-                listView1.BeginUpdate();
                 foreach (var stateMachineNameId_kvp in dataModel.stateMachineNameIdDict)
                 {
                     if (stateMachineNameId_kvp.Value.ToLower().Contains(searchText))
@@ -241,8 +223,8 @@ namespace WitriStatic
                         listView1.Items.Add(lvi);
                     }
                 }
-                listView1.EndUpdate();
             }
+            listView1.EndUpdate();
 
         }
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -276,6 +258,20 @@ namespace WitriStatic
                             {
                                 continue;
                             }
+                            else if (attrName == "Buflet")
+                            {
+                                string bufletFullName = attrValueString;
+                                if(attrValueString != null && attrValueString != string.Empty)
+                                {
+                                    ID = dataModel.bufletDict[attrValueString].ID;
+                                }
+                                if (dataModel.bufletDict.ContainsKey(attrValueString))
+                                {
+                                    bufletFullName = dataModel.bufletDict[attrValueString].FullName;
+                                }
+                                listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, bufletFullName }));
+                                continue;
+                            }
                             else if (attrName == "Section" && attrValueString != null && attrValueString != string.Empty)
                             {
                                 ID = dataModel.sectionDict[attrValueString].ID;
@@ -284,9 +280,19 @@ namespace WitriStatic
                             {
                                 ID = dataModel.bufletDict[attrValueString].ID;
                             }
-                            else if (attrName == "Window" && attrValueString != null && attrValueString != string.Empty)
+                            else if (attrName == "Window" )
                             {
-                                ID = dataModel.windowDict[attrValueString].ID;
+                                string windowFullName = attrValueString;
+                                if (attrValueString != null && attrValueString != string.Empty)
+                                {
+                                    ID = dataModel.windowDict[attrValueString].ID;
+                                }
+                                if (dataModel.windowDict.ContainsKey(attrValueString))
+                                {
+                                    windowFullName = dataModel.windowDict[attrValueString].FullName;
+                                }
+                                listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, windowFullName }));
+                                continue;
                             }
                             else if (attrName == "Compositor" && attrValueString != null && attrValueString != string.Empty)
                             {
@@ -325,7 +331,11 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
+
+                            if (attrName != "Name" && attrName != "ID")
+                            {
+                                listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
+                            }
                         }
                     }
                 }
@@ -376,7 +386,11 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
+                            
+                            if (attrName != "Name" && attrName != "ID")
+                            {
+                                listView2.Items.Add(new ListViewItem(new String[] { "", attrName, attrValueString }));
+                            }
                         }
                     }
                 }
