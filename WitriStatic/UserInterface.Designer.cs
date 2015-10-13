@@ -176,6 +176,7 @@ namespace WitriStatic
             // listView2
             // 
             this.listView2.FullRowSelect = true;
+            this.listView2.HideSelection = false;
             this.listView2.Location = new System.Drawing.Point(625, 33);
             this.listView2.Name = "listView2";
             this.listView2.Size = new System.Drawing.Size(662, 470);

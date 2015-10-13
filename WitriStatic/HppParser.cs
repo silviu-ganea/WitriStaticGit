@@ -176,7 +176,7 @@ namespace WitriStatic
                         dM.windowDict[wName].ID = wId;
                         dM.windowDict[wName].FullName = wFullName;
                         //Console.WriteLine("Window : "+wName+" - "+wId);
-                        log.AppendLine("Window : " + wName + " - " + wId); ;
+                        //log.AppendLine("Window : " + wName + " - " + wId); ;
                     }
                     line = reader.ReadLine();
                 }
@@ -218,13 +218,12 @@ namespace WitriStatic
                 if (dM.compositorLayerDict.Keys.Contains(lName))
                 {
                     dM.compositorLayerDict[lName].ID = lID;
-                    log.AppendLine("Window : " + lName + " - " + lID);
+                    //log.AppendLine("Window : " + lName + " - " + lID);
                 }
                 line = reader.ReadLine();
             }
 
         }//end of loadDifferentData
-
 
         public static void loadStateMachineData(DataModel dataModel)
         {

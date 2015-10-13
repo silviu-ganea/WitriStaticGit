@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace WitriStatic
 {
@@ -21,6 +22,13 @@ namespace WitriStatic
             HppParser.loadHppDataIntoModel(dataModel);
             dataModel.mapWidgetNameID();
             InitializeComponent();
+
+            #region logger
+            StringBuilder logger = new StringBuilder();
+            logger.Append(ModelParser.log);
+            logger.Append(HppParser.log);
+            File.WriteAllText("log.txt", logger.ToString());
+            #endregion
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -317,14 +325,12 @@ namespace WitriStatic
                             }
                             else if (attrName == "Compositor" && attrValueString != null && attrValueString != string.Empty)
                             {
-                                foreach (var compositorLS_kvp in dataModel.compositorLayerDict)
+                                if (dataModel.compositorDict.ContainsKey(attrValueString))
                                 {
-                                    if (compositorLS_kvp.Value.ShortName == attrValueString)
-                                    {
-                                        ID = compositorLS_kvp.Value.ID;
-                                        break;
-                                    }
+                                    listView2.Items.Add(new ListViewItem(new String[] { dataModel.compositorDict[attrValueString].ID, attrName, dataModel.compositorDict[attrValueString].FullName }));
+                                    continue;
                                 }
+                               
                             }
 
                             listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, attrValueString }));
@@ -477,27 +483,79 @@ namespace WitriStatic
 
         private void listView1_menuCopyID_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(listView1.SelectedItems[0].SubItems[1].Text);
+            string copyText = "";
+            foreach (ListViewItem selected in listView1.SelectedItems)
+            {
+                if (selected.SubItems[1].Text != null && selected.SubItems[1].Text != string.Empty)
+                {
+                    copyText += selected.SubItems[1].Text + System.Environment.NewLine;
+                }
+            }
+            if (copyText == "")
+            {
+                copyText = " ";
+            }
+            Clipboard.SetText(copyText);
         }
         private void listView1_menuCopyName_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(listView1.SelectedItems[0].SubItems[2].Text);
+            string copyText = "";
+            foreach (ListViewItem selected in listView1.SelectedItems)
+            {
+                if (selected.SubItems[2].Text != null && selected.SubItems[2].Text != string.Empty)
+                {
+                    copyText += selected.SubItems[2].Text + System.Environment.NewLine;
+                }
+            }
+            if (copyText == "")
+            {
+                copyText = " ";
+            }
+            Clipboard.SetText(copyText);
         }
         private void listView2_menuCopyID_Click(object sender, EventArgs e)
         {
-            if(listView2.SelectedItems[0].SubItems[0].Text != null && listView2.SelectedItems[0].SubItems[0].Text != string.Empty)
+            string copyText = "";
+            foreach(ListViewItem selected in listView2.SelectedItems)
             {
-                Clipboard.SetText(listView2.SelectedItems[0].SubItems[0].Text);
+                if(selected.SubItems[0].Text != null && selected.SubItems[0].Text != string.Empty)
+                {
+                    copyText += selected.SubItems[0].Text + System.Environment.NewLine;
+                }
             }
-            else if (listView2.SelectedItems[0].SubItems[0].Text != null && listView2.SelectedItems[0].SubItems[0].Text == string.Empty)
+            if (copyText == "")
             {
-                Clipboard.SetText(" ");
+                copyText = " ";
             }
-            
+            Clipboard.SetText(copyText);
         }
         private void listView2_menuCopyName_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(listView2.SelectedItems[0].SubItems[2].Text);
+            string copyText = "";
+                    
+            foreach (ListViewItem selected in listView2.SelectedItems)
+            {
+                if (this.radioButton_StateMachine.Checked)
+                {
+                    if (selected.SubItems[1].Text != null && selected.SubItems[1].Text != string.Empty)
+                    {
+                        copyText += selected.SubItems[1].Text + System.Environment.NewLine;
+                    }
+                }
+                else
+                {
+                    if (selected.SubItems[2].Text != null && selected.SubItems[2].Text != string.Empty)
+                    {
+                        copyText += selected.SubItems[2].Text + System.Environment.NewLine;
+                    }
+                }
+                
+            }
+            if(copyText == "")
+            {
+                copyText = " ";
+            }
+            Clipboard.SetText(copyText);
         }
 
     class ListViewItemComparer : IComparer
