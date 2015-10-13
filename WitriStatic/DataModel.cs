@@ -17,6 +17,7 @@ namespace WitriStatic
         public Dictionary<string, Message> messageDict;
         public Dictionary<string, StateMachine> stateMachineDict;
         public Dictionary<string, CompositorLayerSection> compositorLayerDict;
+        public Dictionary<string, Compositor> compositorDict;
         public List<string> detachedWidgets;
 
         public Dictionary<string, string> windowNameIdDict;
@@ -38,6 +39,7 @@ namespace WitriStatic
             this.messageDict = new Dictionary<string, Message>();
             this.stateMachineDict = new Dictionary<string, StateMachine>();
             this.compositorLayerDict = new Dictionary<string, CompositorLayerSection>();
+            this.compositorDict = new Dictionary<string, Compositor>();
 
             this.windowNameIdDict = new Dictionary<string, string>();
             this.widgetNameIdDict = new Dictionary<string, string>();
@@ -128,6 +130,7 @@ namespace WitriStatic
         public class Compositor
         {
             public string Name { get; set; }
+            public string FullName { get; set; }
             public string ID { get; set; }
             public Compositor(string name)
             {

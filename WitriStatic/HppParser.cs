@@ -183,6 +183,26 @@ namespace WitriStatic
                 else line = reader.ReadLine();
             }
 
+            //insert CompositorIDs
+            while (!line.Contains("CompositorIDs"))
+            {
+                line = reader.ReadLine();
+            }
+            line = reader.ReadLine();
+            //now we are at the line where CompositorIDs are stored
+            while (!line.Contains("NumberOfCompositors"))
+            {
+                string fullName = line.Split('=')[0].Trim();
+                string shortName = fullName.Replace("Compositor_", "");
+                string id = line.Split('=')[1].Split(',')[0].Trim();
+                DataModel.Compositor c = new DataModel.Compositor(shortName);
+                c.ID = id;
+                c.FullName = fullName;
+                dM.compositorDict.Add(shortName, c);
+                line = reader.ReadLine();
+            }
+
+
             //insert CompositorLayerIDs
             while (!line.Contains("CompositorLayerIDs"))
             {

@@ -182,6 +182,7 @@ namespace WitriStatic
             this.listView2.Columns.Add("ID");
             this.listView2.Columns.Add("Property");
             this.listView2.Columns.Add("Value");
+            this.listView2.ShowItemToolTips = true;
             //this.listView2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView2_MouseClick);
 
             ContextMenuStrip contextMenuListView2 = new ContextMenuStrip();

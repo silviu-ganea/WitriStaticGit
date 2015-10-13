@@ -13,6 +13,8 @@ namespace WitriStatic
     public partial class UserInterface : Form
     {
         DataModel dataModel = new DataModel();
+        public static bool ascendingSort = true;
+        public static bool ascendingSort_detach = true;
         public UserInterface()
         {
             ModelParser.loadXmlDataIntoModel(dataModel);
@@ -140,7 +142,7 @@ namespace WitriStatic
         }
         private void radioButton_Animation_func()
         {
-           
+           listView2.Items.Clear();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -237,6 +239,7 @@ namespace WitriStatic
                 string selectedText = listView1.SelectedItems[0].SubItems[2].Text;
                 if (radioButton_Widget.Checked)
                 {
+                    string widgetName = string.Empty;
                     //listView2.Items.Add(new ListViewItem(new String[] {"", "Is Detached", Convert.ToString(dataModel.widgetDict[selectedText].isDetached) }));
                     foreach (System.Reflection.PropertyInfo attr in dataModel.widgetDict[selectedText].GetType().GetProperties())
                     {
@@ -244,6 +247,7 @@ namespace WitriStatic
                         {
                             string attrValueString;
                             string ID = string.Empty;
+                            
                             var attrValue = attr.GetValue(dataModel.widgetDict[selectedText], null);
                             if (attrValue != null)
                             {
@@ -254,14 +258,19 @@ namespace WitriStatic
                                 attrValueString = string.Empty;
                             }
                             string attrName = attr.Name.ToString();
-                            if (new[]{ "ID", "Name" }.Contains(attrName))
+                            if (attrName == "Name")
                             {
+                                widgetName = attrValueString;
                                 continue;
+                            }
+                            else if (attrName == "ID")
+                            {
+
                             }
                             else if (attrName == "Buflet")
                             {
                                 string bufletFullName = attrValueString;
-                                if(attrValueString != null && attrValueString != string.Empty)
+                                if (attrValueString != null && attrValueString != string.Empty)
                                 {
                                     ID = dataModel.bufletDict[attrValueString].ID;
                                 }
@@ -272,15 +281,27 @@ namespace WitriStatic
                                 listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, bufletFullName }));
                                 continue;
                             }
+                            else if (attrName == "Layer")
+                            {
+                                string fullName = attrValueString;
+                                string tempName = string.Empty;
+                                if (dataModel.widgetDict.ContainsKey(widgetName))
+                                {
+                                    tempName = "CompositorLayer_" + dataModel.widgetDict[widgetName].Compositor + "_" + dataModel.widgetDict[widgetName].Layer + "_" + dataModel.widgetDict[widgetName].Section;
+                                    if (dataModel.compositorLayerDict.ContainsKey(tempName))
+                                    {
+                                        fullName = dataModel.compositorLayerDict[tempName].Name;
+                                        ID = dataModel.compositorLayerDict[tempName].ID;
+                                    }
+                                }
+                                listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, fullName }));
+                                continue;
+                            }
                             else if (attrName == "Section" && attrValueString != null && attrValueString != string.Empty)
                             {
                                 ID = dataModel.sectionDict[attrValueString].ID;
                             }
-                            else if (attrName == "Buflet" && attrValueString != null && attrValueString != string.Empty)
-                            {
-                                ID = dataModel.bufletDict[attrValueString].ID;
-                            }
-                            else if (attrName == "Window" )
+                            else if (attrName == "Window")
                             {
                                 string windowFullName = attrValueString;
                                 if (attrValueString != null && attrValueString != string.Empty)
@@ -296,19 +317,15 @@ namespace WitriStatic
                             }
                             else if (attrName == "Compositor" && attrValueString != null && attrValueString != string.Empty)
                             {
-                                foreach(var compositorLS_kvp in dataModel.compositorLayerDict)
+                                foreach (var compositorLS_kvp in dataModel.compositorLayerDict)
                                 {
-                                    if(compositorLS_kvp.Value.ShortName == attrValueString)
+                                    if (compositorLS_kvp.Value.ShortName == attrValueString)
                                     {
                                         ID = compositorLS_kvp.Value.ID;
                                         break;
                                     }
                                 }
                             }
-                            //else if (attrName == "Layer" && attrValueString != null && attrValueString != string.Empty)
-                            //{
-                            //    ID = dataModel.windowDict[attrValueString].ID;
-                            //}
 
                             listView2.Items.Add(new ListViewItem(new String[] { ID, attrName, attrValueString }));
                         }
@@ -422,7 +439,8 @@ namespace WitriStatic
                     {
                         listView2.Items.Add(new ListViewItem(new String[] { "", stateMachineState.Key, stateMachineState.Value }));
                     }
-                    
+                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
                 }
             }
             listView2.EndUpdate();
@@ -453,6 +471,8 @@ namespace WitriStatic
         {
             this.listView1.ListViewItemSorter = new ListViewItemComparer(e.Column);
             this.listView1.Sort();
+            ascendingSort = !ascendingSort;
+            ascendingSort_detach = !ascendingSort_detach;
         }
 
         private void listView1_menuCopyID_Click(object sender, EventArgs e)
@@ -475,7 +495,7 @@ namespace WitriStatic
         {
             Clipboard.SetText(listView2.SelectedItems[0].SubItems[2].Text);
         }
-    }
+
     class ListViewItemComparer : IComparer
     {
         private int col;
@@ -490,31 +510,66 @@ namespace WitriStatic
         public int Compare(object x, object y)
         {
             int returnVal = -1;
+            //if the ID column was clicked
             if (col == 1)
             {
-                if(((ListViewItem)x).SubItems[col].Text != string.Empty && ((ListViewItem)y).SubItems[col].Text != string.Empty)
-                {
-                    if (Int32.Parse(((ListViewItem)x).SubItems[col].Text) > Int32.Parse(((ListViewItem)y).SubItems[col].Text))
+                    if(((ListViewItem)x).SubItems[col].Text != string.Empty && ((ListViewItem)y).SubItems[col].Text != string.Empty)
                     {
-                        return 1;
+                            if (Int32.Parse(((ListViewItem)x).SubItems[col].Text) < Int32.Parse(((ListViewItem)y).SubItems[col].Text) && ascendingSort == true)
+                            {
+                                return 1;
+                            }
+                            if (Int32.Parse(((ListViewItem)x).SubItems[col].Text) > Int32.Parse(((ListViewItem)y).SubItems[col].Text) && ascendingSort == false)
+                            {
+                                return 1;
+                            } 
                     }
-                } 
             }
+            //if the detached column was clicked
             else if(col == 3)
             {
-                if(((ListViewItem)x).SubItems[col] != null){
-                    if (((ListViewItem)x).SubItems[col].Text != "detached")
+                var lvItem = ((ListViewItem)x).SubItems[col];
+                int result;
+                if (lvItem != null)
+                {
+                    if (lvItem.Text != "detached")
                     {
-                        return 1;
+                            if (ascendingSort_detach)
+                            {
+                                result = -1;
+                            }
+                            else
+                            {
+                                result = 1;
+                            }
                     }
-                }
-                
+                    else
+                    {
+                            if (ascendingSort_detach)
+                            {
+                                result = 1;
+                            }
+                            else
+                            {
+                                result = -1;
+                            }
+                    }
+                    return result;
+                }  
             }
             else
             {
-                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+                if (ascendingSort)
+                {
+                    returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+                }
+                else
+                {
+                    returnVal = String.Compare(((ListViewItem)y).SubItems[col].Text, ((ListViewItem)x).SubItems[col].Text);
+                }      
             }
             return returnVal;
+            }
         }
     }
 }
