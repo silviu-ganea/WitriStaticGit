@@ -439,9 +439,9 @@ namespace WitriStatic
                     {
                         listView2.Items.Add(new ListViewItem(new String[] { "", stateMachineState.Key, stateMachineState.Value }));
                     }
-                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
                 }
+                listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             }
             listView2.EndUpdate();
         }
@@ -488,6 +488,10 @@ namespace WitriStatic
             if(listView2.SelectedItems[0].SubItems[0].Text != null && listView2.SelectedItems[0].SubItems[0].Text != string.Empty)
             {
                 Clipboard.SetText(listView2.SelectedItems[0].SubItems[0].Text);
+            }
+            else if (listView2.SelectedItems[0].SubItems[0].Text != null && listView2.SelectedItems[0].SubItems[0].Text == string.Empty)
+            {
+                Clipboard.SetText(" ");
             }
             
         }
