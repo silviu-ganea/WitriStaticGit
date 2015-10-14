@@ -224,7 +224,7 @@ namespace WitriStatic
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
-            this.Icon = this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "UserInterface";
             this.Text = "WITRI Static";
             this.ResumeLayout(false);
